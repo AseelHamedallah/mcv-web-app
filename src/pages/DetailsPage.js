@@ -1,8 +1,9 @@
 import React from 'react';
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from 'react-router-dom';
 import { useParams } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import styles from '../styles/DetailsPage.module.css';
+import UAEImage from '../assets/download.jpg';
 
 function DetailsPage() {
   const navigate = useNavigate();
@@ -11,7 +12,7 @@ function DetailsPage() {
   const item = filteredItems[parseInt(id, 10)];
 
   const goBack = () => {
-    navigate('/')
+    navigate('/');
   };
 
   if (!item) {
@@ -24,20 +25,22 @@ function DetailsPage() {
         <p>Country: {item.country}</p>
         <p>State/Province: {item['state-province'] || 'N/A'}</p>
         <p>Domains: {item.domains.join(', ')}</p>
-        <p>Web Pages:</p>
-        <div className={styles.link}>
-          {item.web_pages.map((page, index) => (
-            <a key={index} href={page} target="_blank" rel="noopener noreferrer">
-              {page}
-            </a>
-          ))}
+        <div className={styles.webContainer} >
+          <p>Web Pages:</p>
+          <div className={styles.link}>
+            {item.web_pages.map((page, index) => (
+              <a key={index} href={page} target="_blank" rel="noopener noreferrer">
+                {page}
+              </a>
+            ))}
+          </div>
         </div>
 
+        <img src={UAEImage} alt="UAE" className={styles.uaeImage} />
       </div>
-
       <button onClick={goBack} className={styles.backButton}>
-          Back
-        </button>
+        Back
+      </button>
     </div>
   );
 }

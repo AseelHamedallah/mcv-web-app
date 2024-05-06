@@ -12,7 +12,9 @@ function ListingPage() {
   const [originalItems, setOriginalItems] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [sortOrder, setSortOrder] = useState('asc');
-  const pageSize = 10; 
+  const pageSize = 10;
+
+  // Here we are fetching the data from the API and setting the filtered items in the Redux store.
   useEffect(() => {
     fetchData()
       .then((data) => {
@@ -22,21 +24,22 @@ function ListingPage() {
       .catch((error) => console.error('Error fetching data:', error));
   }, [dispatch]);
 
+
   const filteredItems = useSelector((state) => state.filteredItems);
   const [showModal, setShowModal] = useState(false);
-const [itemToDelete, setItemToDelete] = useState(null);
+  const [itemToDelete, setItemToDelete] = useState(null);
 
   const handleModalClose = () => {
     setItemToDelete(null);
     setShowModal(false);
   };
-  
+
   const handleDelete = (id) => {
     setItemToDelete(id);
     setShowModal(true);
   };
-  
 
+// Here we are deleting the item from the filtered items and updating the UI accordingly.
   const handleModalConfirm = () => {
     const updatedItems = filteredItems.filter((item) => item.id !== itemToDelete);
     const itemElement = document.getElementById(`item-${itemToDelete}`);
@@ -53,11 +56,11 @@ const [itemToDelete, setItemToDelete] = useState(null);
         });
       }, 500);
     }
-  
+
     handleModalClose();
   };
-  
 
+//here we are sorting the items based on the name and updating the UI accordingly.
   const handleSort = () => {
     const sortedItems = [...filteredItems].sort((a, b) => {
       if (sortOrder === 'asc') {
@@ -81,6 +84,8 @@ const [itemToDelete, setItemToDelete] = useState(null);
     }
   };
 
+
+  // Pagination logic
   const totalPages = Math.ceil(filteredItems.length / pageSize);
 
   const handlePageChange = (page) => {
@@ -89,12 +94,13 @@ const [itemToDelete, setItemToDelete] = useState(null);
 
   const visibleItems = filteredItems.slice((currentPage - 1) * pageSize, currentPage * pageSize);
 
+  
   return (
     <div className={styles.container}>
       <h1>Listing Page</h1>
       {showModal && (
-      <Modal onClose={handleModalClose} onConfirm={handleModalConfirm} />
-    )}
+        <Modal onClose={handleModalClose} onConfirm={handleModalConfirm} />
+      )}
       <div className={styles.searchContainer}>
         <div className={styles.inputContainer}>
           <input
@@ -149,7 +155,7 @@ const [itemToDelete, setItemToDelete] = useState(null);
         </div>
       )}
 
-      <div className={styles.pagination} style={{ bottom: '10px'}}>
+      <div className={styles.pagination} style={{ bottom: '10px' }}>
         <button
           disabled={currentPage === 1}
           onClick={() => handlePageChange(currentPage - 1)}
