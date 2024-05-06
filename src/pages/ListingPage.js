@@ -3,7 +3,8 @@ import { Link } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { setFilteredItems } from '../reducers/filteredItemsSlice';
 import { fetchData } from '../services/api';
-import styles from './ListingPage.module.css';
+import styles from '../styles/ListingPage.module.css';
+import Modal from '../components/Modal';
 
 function ListingPage() {
   const dispatch = useDispatch();
@@ -22,11 +23,23 @@ function ListingPage() {
   }, [dispatch]);
 
   const filteredItems = useSelector((state) => state.filteredItems);
+  const [showModal, setShowModal] = useState(false);
+const [itemToDelete, setItemToDelete] = useState(null);
 
+  const handleModalClose = () => {
+    setItemToDelete(null);
+    setShowModal(false);
+  };
+  
   const handleDelete = (id) => {
-    const updatedItems = filteredItems.filter((item) => item.id !== id);
+    setItemToDelete(id);
+    setShowModal(true);
+  };
+  
 
-    const itemElement = document.getElementById(`item-${id}`);
+  const handleModalConfirm = () => {
+    const updatedItems = filteredItems.filter((item) => item.id !== itemToDelete);
+    const itemElement = document.getElementById(`item-${itemToDelete}`);
     if (itemElement) {
       itemElement.style.transition = 'transform 0.5s ease';
       itemElement.style.transform = 'translateY(-20px)';
@@ -40,8 +53,10 @@ function ListingPage() {
         });
       }, 500);
     }
+  
+    handleModalClose();
   };
-
+  
 
   const handleSort = () => {
     const sortedItems = [...filteredItems].sort((a, b) => {
@@ -77,7 +92,9 @@ function ListingPage() {
   return (
     <div className={styles.container}>
       <h1>Listing Page</h1>
-
+      {showModal && (
+      <Modal onClose={handleModalClose} onConfirm={handleModalConfirm} />
+    )}
       <div className={styles.searchContainer}>
         <div className={styles.inputContainer}>
           <input
@@ -129,11 +146,10 @@ function ListingPage() {
               </div>
             );
           })}
-
         </div>
       )}
 
-      <div className={styles.pagination}>
+      <div className={styles.pagination} style={{ bottom: '10px'}}>
         <button
           disabled={currentPage === 1}
           onClick={() => handlePageChange(currentPage - 1)}

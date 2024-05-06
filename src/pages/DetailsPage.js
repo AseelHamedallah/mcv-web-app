@@ -2,12 +2,9 @@ import React from 'react';
 import { useNavigate } from "react-router-dom";
 import { useParams } from 'react-router-dom';
 import { useSelector } from 'react-redux';
-import { withRouter } from 'react-router-dom';
-import styles from './DetailsPage.module.css';
+import styles from '../styles/DetailsPage.module.css';
 
-function DetailsPage({  }) {
-
-
+function DetailsPage() {
   const navigate = useNavigate();
   const { id } = useParams();
   const filteredItems = useSelector((state) => state.filteredItems);
